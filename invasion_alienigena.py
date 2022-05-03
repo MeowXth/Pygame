@@ -2,14 +2,14 @@ import sys
 from turtle import bgcolor
 
 import pygame
-
+from configuraciones import Configuraciones
 def run_game():
-    #inicializar el jueego y crear un objeto en pantalla
+    #inicializar el jueego, las configuraciones y crear un objeto en pantalla
     pygame.init()
-    pantalla = pygame.display.set_mode((800, 600))
+    ai_configuraciones = Configuraciones()
+    pantalla = pygame.display.set_mode((ai_configuraciones.screen_width, ai_configuraciones.screen_height))
     pygame.display.set_caption("Invacion Alienigena")
-    #Color de fondo
-    bg_color = (230, 230, 230) 
+    
 
     #iniciar el bucle principal del juego
 
@@ -20,7 +20,7 @@ def run_game():
             if event.type == pygame.QUIT:
                 sys.exit()
         # volver a dibujar la pantalla durante cada psada por el bucle        
-        pantalla.fill(bg_color)
+        pantalla.fill(ai_configuraciones.bg_color)
 
         #hacer visible la pantalla dibujanda mas reciente        
         pygame.display.flip()
