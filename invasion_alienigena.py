@@ -4,7 +4,7 @@ from turtle import bgcolor
 import pygame
 
 def run_game():
-    #inicializar el juego y crear un objeto en pantalla
+    #inicializar el jueego y crear un objeto en pantalla
     pygame.init()
     pantalla = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("Invacion Alienigena")
