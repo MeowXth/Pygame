@@ -9,9 +9,7 @@ def verificar_eventos_keydown(event, ai_configuraciones, pantalla, nave, balas):
     elif event.key == pygame.K_LEFT:
         nave.moving_left = True
     elif event.key == pygame.K_SPACE:
-        #crea una nueva bala y la agrega al grupo de balas
-        nueva_bala = Bala(ai_configuraciones, pantalla, nave)
-        balas.add(nueva_bala)    
+        fuego_bala(ai_configuraciones, pantalla,nave,balas)  
 
 def verificar_eventos_keyup(event, nave):
     if event.key == pygame.K_RIGHT:
@@ -42,4 +40,18 @@ def actualizar_pantalla(ai_configuraciones, pantalla, nave, balas):
         bala.draw_bala()
     nave.blitme()
     #hacer visible la pantalla dibujanda mas reciente        
-    pygame.display.flip()           
+    pygame.display.flip()
+
+def update_balas(balas):
+    #actualzia la posicionn de las balas y elimina las antieguas
+    # actualiza las posciones de las balas
+    balas.update()
+    #deshace las balas que han desaparecido
+    for bala in balas.copy():
+        if bala.rect.bottom <= 0:
+            balas.remove(bala)
+def fuego_bala(ai_configuraciones, pantalla, nave, balas):
+    #crea una nueva bala y la agrega al grupo de balas
+    if len(balas) < ai_configuraciones.balas_allowed:
+        nueva_bala = Bala(ai_configuraciones, pantalla, nave)
+        balas.add(nueva_bala)                            

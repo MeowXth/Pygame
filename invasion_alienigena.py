@@ -26,6 +26,7 @@ def run_game():
         fj.verificar_eventos(ai_configuraciones, pantalla, nave, balas)
         
         nave.update()
-        balas.update()
+        fj.update_balas(balas)
+                
         fj.actualizar_pantalla(ai_configuraciones, pantalla, nave, balas)
 run_game()        
