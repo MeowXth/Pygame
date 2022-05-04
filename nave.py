@@ -25,13 +25,14 @@ class Nave():
         self.moving_left= False
 
     def update(self):
-        #Actualiza la posicion de la nave segun la bandera de movimiento
-        if self.moving_right:
+        #Actualiza la posicion de la nave segun las banderas de movimiento
+        if self.moving_right and self.rect.right < self.pantalla_rect.right:
             self.center += self.ai_configuraciones.factor_velocidad_nave
-        if self.moving_left:
+        if self.moving_left and self.rect.left > 0:
             self.center -= self.ai_configuraciones.factor_velocidad_nave
+        #actualiza el objeto Rect desde self.center    
+        self.rect.centerx = self.center
 
-        self.rect.centerx = self.center        
     def blitme(self):
         #dibuja la nave en su ubicacion actual
         self.pantalla.blit(self.imagen, self.rect)    
