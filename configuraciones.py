@@ -18,3 +18,9 @@ class Configuraciones():
         self.bala_color = 60, 60, 60
 
         self.balas_allowed = 3
+
+        #Configuraciones de alien
+        self.alien_speed_factor = 1
+        self.fleet_drop_speed = 10
+        #fleet_direction, cuando es 1 representa a la derecha; si es -1 representa a la izquierda
+        self.fleet_direction = 1

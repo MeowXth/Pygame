@@ -29,7 +29,7 @@ def run_game():
         fj.verificar_eventos(ai_configuraciones, pantalla, nave, balas)
         
         nave.update()
-        fj.update_balas(balas)
-                
+        fj.update_balas(balas,aliens)
+        fj.update_aliens(ai_configuraciones,aliens)        
         fj.actualizar_pantalla(ai_configuraciones, pantalla, nave, aliens, balas)
 run_game()        

@@ -1,5 +1,7 @@
+from ast import alias
 import imp
 import sys
+from tkinter.tix import Tree
 from zoneinfo import available_timezones
 import pygame
 
@@ -49,7 +51,7 @@ def actualizar_pantalla(ai_configuraciones, pantalla, nave, aliens, balas):
     #hacer visible la pantalla dibujanda mas reciente        
     pygame.display.flip()
 
-def update_balas(balas):
+def update_balas(balas, aliens):
     #actualzia la posicionn de las balas y elimina las antieguas
     # actualiza las posciones de las balas
     balas.update()
@@ -57,6 +59,12 @@ def update_balas(balas):
     for bala in balas.copy():
         if bala.rect.bottom <= 0:
             balas.remove(bala)
+    #comprueba si hay balas que hayan alcanzado a los aliens
+    # si es asi, desaparece la bala y el alien
+    collisions = pygame.sprite.groupcollide(balas, aliens, True, True)
+    
+
+
 def fuego_bala(ai_configuraciones, pantalla, nave, balas):
     #crea una nueva bala y la agrega al grupo de balas
     if len(balas) < ai_configuraciones.balas_allowed:
@@ -97,4 +105,25 @@ def crear_flota(ai_configuraciones, pantalla, nave, aliens):
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
             crear_alien(ai_configuraciones, pantalla, aliens, alien_number, row_number)
+
+def check_fleet_edges(ai_configuraciones,  aliens, ):
+    """Respnde de forma apropiada si algun alien ha lelgado a un borde"""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(ai_configuraciones, aliens)
+            break
+
+def change_fleet_direction(ai_configuraciones, aliens):
+    """Desciende toda la flota y cambia la direccion de la flota"""
+    for alien in aliens.sprites():
+        alien.rect.y += ai_configuraciones.fleet_drop_speed
+        ai_configuraciones.fleet_direction *= -1
+
+def update_aliens(ai_configuraciones,aliens):
+    """comprueba si la flota esta al borde y luego Actualiza las posiciones de todos los aliens de la flota"""
+    check_fleet_edges(ai_configuraciones, aliens)
+    aliens.update()
+
+    
+
                                     
