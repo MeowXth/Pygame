@@ -20,7 +20,7 @@ def run_game():
     balas = Group()
     aliens = Group()
     #crea la flota de  aliens
-    fj.crear_flota(ai_configuraciones,pantalla,aliens)
+    fj.crear_flota(ai_configuraciones,pantalla,nave,aliens)
     #iniciar el bucle principal del juego
 
     while True:

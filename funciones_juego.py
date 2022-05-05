@@ -1,5 +1,6 @@
 import imp
 import sys
+from zoneinfo import available_timezones
 import pygame
 
 from nave import Nave
@@ -68,23 +69,32 @@ def get_number_aliens_x(ai_configuraciones, alien_width):
     number_aliens_x = int(available_space_x / (2 * alien_width))
     return number_aliens_x
 
-def crear_alien(ai_configuraciones, pantalla, aliens, alien_number):
+def get_number_rows(ai_configuraciones, nave_heigth, alien_height):
+    #Crear columnas de aliens
+    available_space_y = (ai_configuraciones.screen_height - (3 * alien_height) - nave_heigth)
+    number_rows = int(available_space_y / (2 * alien_height))
+    return number_rows
+
+def crear_alien(ai_configuraciones, pantalla, aliens, alien_number, row_number):
     #crea un alien y lo coloca en linea
     alien = Alien(ai_configuraciones, pantalla)
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number
     alien.rect.x = alien.x
+    alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
     aliens.add(alien)
 
-def crear_flota(ai_configuraciones, pantalla, aliens):
+def crear_flota(ai_configuraciones, pantalla, nave, aliens):
     """crea flota completa"""
     #crea un alien y encuentra el numero de aliens seguidos
     #El espacio entre cada alien es igual a un ancho del alien
     alien = Alien(ai_configuraciones, pantalla)
 
     number_aliens_x = get_number_aliens_x(ai_configuraciones, alien.rect.width)
+    number_rows = get_number_rows(ai_configuraciones, nave.rect.height, alien.rect.height)
 
-    #Crea la primera fila de aliens
-    for alien_number in range(number_aliens_x):
-        crear_alien(ai_configuraciones, pantalla, aliens, alien_number)
+    #Crea flota  de aliens
+    for row_number in range(number_rows):
+        for alien_number in range(number_aliens_x):
+            crear_alien(ai_configuraciones, pantalla, aliens, alien_number, row_number)
                                     
