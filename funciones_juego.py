@@ -1,6 +1,8 @@
 from ast import alias
+from distutils.command import check
 import imp
 import sys
+from time import sleep
 from tkinter.tix import Tree
 from zoneinfo import available_timezones
 import pygame
@@ -51,7 +53,7 @@ def actualizar_pantalla(ai_configuraciones, pantalla, nave, aliens, balas):
     #hacer visible la pantalla dibujanda mas reciente        
     pygame.display.flip()
 
-def update_balas(balas, aliens):
+def update_balas(ai_configuraciones, pantalla, nave, balas, aliens):
     #actualzia la posicionn de las balas y elimina las antieguas
     # actualiza las posciones de las balas
     balas.update()
@@ -59,10 +61,16 @@ def update_balas(balas, aliens):
     for bala in balas.copy():
         if bala.rect.bottom <= 0:
             balas.remove(bala)
-    #comprueba si hay balas que hayan alcanzado a los aliens
-    # si es asi, desaparece la bala y el alien
-    collisions = pygame.sprite.groupcollide(balas, aliens, True, True)
+    check_bala_alien_collisions(ai_configuraciones, pantalla, nave, aliens, balas)
     
+def check_bala_alien_collisions(ai_configuraciones, pantalla, nave, aliens, balas):
+    """Responde  a las colsiones entre balas y aliens """
+    #elimina las balas y los aliens que hayan chocacdo
+    collisions = pygame.sprite.groupcollide(balas, aliens, True, True)
+    if len(aliens) == 0:
+        #destruye las balas existentes y crea una nueva flota
+        balas.empty()
+        crear_flota(ai_configuraciones, pantalla, nave, aliens)
 
 
 def fuego_bala(ai_configuraciones, pantalla, nave, balas):
@@ -119,10 +127,42 @@ def change_fleet_direction(ai_configuraciones, aliens):
         alien.rect.y += ai_configuraciones.fleet_drop_speed
         ai_configuraciones.fleet_direction *= -1
 
-def update_aliens(ai_configuraciones,aliens):
+def nave_golpeada(ai_configuraciones, estadisticas, pantalla, nave, aliens, balas):
+    """Responde a una nave siendo golpeada por un alien"""
+    if estadisticas.naves_restantes > 0:
+        estadisticas.naves_restantes -= 1
+        # Vacia la lista de aliens y balas
+        aliens.empty()
+        balas.empty()
+
+        # Crea una nueba flota y centra la nave
+        crear_flota(ai_configuraciones, pantalla, nave, aliens)
+        nave.centrar_nave()
+
+        #Pausa
+        sleep(0.5)
+    else:
+        estadisticas.game_active = False    
+    
+def check_aliens_bottom(ai_configuraciones, estadisticas, pantalla, nave, aliens, balas):
+    """Comprueba si algun alien ha llegado al final de la pantalla"""
+    pantalla_rect = pantalla.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= pantalla_rect.bottom:
+            #trata esto de la misma foma que si la nave fuera golpeada
+            nave_golpeada(ai_configuraciones, estadisticas, pantalla,nave, aliens, balas)
+            break    
+
+def update_aliens(ai_configuraciones,estadisticas, pantalla, nave, aliens, balas):
     """comprueba si la flota esta al borde y luego Actualiza las posiciones de todos los aliens de la flota"""
     check_fleet_edges(ai_configuraciones, aliens)
     aliens.update()
+    #busca colisiones de alien-nave
+    if pygame.sprite.spritecollideany(nave, aliens):
+        nave_golpeada(ai_configuraciones, estadisticas, pantalla, nave, aliens, balas)
+    #busca aliens que golpean la parte inferior de la pantalla
+    check_aliens_bottom(ai_configuraciones,estadisticas, pantalla, nave, aliens, balas)
+
 
     
 

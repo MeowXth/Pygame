@@ -35,4 +35,7 @@ class Nave():
 
     def blitme(self):
         #dibuja la nave en su ubicacion actual
-        self.pantalla.blit(self.imagen, self.rect)    
+        self.pantalla.blit(self.imagen, self.rect)
+
+    def centrar_nave(self):
+        self.center = self.pantalla_rect.centerx        

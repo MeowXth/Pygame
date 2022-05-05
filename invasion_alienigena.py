@@ -6,7 +6,7 @@ from pygame.sprite import Group
 import funciones_juego as fj
 from configuraciones import Configuraciones
 from nave import Nave
-
+from estadisticas import Estadisticas
 
 def run_game():
     #inicializar el jueego, las configuraciones y crear un objeto en pantalla
@@ -14,6 +14,9 @@ def run_game():
     ai_configuraciones = Configuraciones()
     pantalla = pygame.display.set_mode((ai_configuraciones.screen_width, ai_configuraciones.screen_height))
     pygame.display.set_caption("Invacion Alienigena")
+
+    #Crea una instancia para almacenar estadisticas del juego
+    estadisticas = Estadisticas(ai_configuraciones)
     
     #crea nave,#crea un grupo para almacenar las balas,grupo de alien
     nave = Nave(ai_configuraciones, pantalla)
@@ -27,9 +30,10 @@ def run_game():
 
         #escuchar eventos de teclado o de raton
         fj.verificar_eventos(ai_configuraciones, pantalla, nave, balas)
-        
-        nave.update()
-        fj.update_balas(balas,aliens)
-        fj.update_aliens(ai_configuraciones,aliens)        
+        if estadisticas.game_active:
+            nave.update()
+            fj.update_balas(ai_configuraciones, pantalla,nave,balas,aliens)
+            fj.update_aliens(ai_configuraciones,estadisticas, pantalla ,nave, aliens, balas)
+                
         fj.actualizar_pantalla(ai_configuraciones, pantalla, nave, aliens, balas)
 run_game()        
