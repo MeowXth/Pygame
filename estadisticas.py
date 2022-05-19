@@ -6,6 +6,8 @@ class Estadisticas():
         self.reset_stats()
         #Inicia invasion alienigena en un estado activo
         self.game_active = False
+        # la puntuacion alta nunca debe restablecerse 
+        self.alto_puntaje = 0
         
 
 
@@ -13,4 +15,5 @@ class Estadisticas():
         """Inicializa estadisticas que puden cambiar durante el juego"""
         self.naves_restantes = self.ai_configuraciones.cantidad_naves
         self.puntaje = 0
+        self.nivel = 1
             
