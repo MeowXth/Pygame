@@ -46,6 +46,8 @@ def check_play_button(ai_configuraciones, pantalla, estadisticas, play_button,na
     """Comienza UN NUEVO JUEGO CUANDO EL JUGADOR HACE CLICK EN PLAy"""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not estadisticas.game_active:
+        #restablece la configuracion del juego
+        ai_configuraciones.inicializa_configuraciones_dinamicas()
         #ocultar el cursor del raton
         pygame.mouse.set_visible(False)
 
@@ -93,6 +95,7 @@ def check_bala_alien_collisions(ai_configuraciones, pantalla, nave, aliens, bala
     if len(aliens) == 0:
         #destruye las balas existentes y crea una nueva flota
         balas.empty()
+        ai_configuraciones.aumentar_velocidad()
         crear_flota(ai_configuraciones, pantalla, nave, aliens)
 
 
