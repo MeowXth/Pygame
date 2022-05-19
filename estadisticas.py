@@ -12,4 +12,5 @@ class Estadisticas():
     def reset_stats(self):
         """Inicializa estadisticas que puden cambiar durante el juego"""
         self.naves_restantes = self.ai_configuraciones.cantidad_naves
+        self.puntaje = 0
             
