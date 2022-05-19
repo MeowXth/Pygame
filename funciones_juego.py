@@ -28,7 +28,7 @@ def verificar_eventos_keyup(event, nave):
 
 
 
-def verificar_eventos(ai_configuraciones, pantalla,estadisticas, play_button, nave, balas):
+def verificar_eventos(ai_configuraciones, pantalla,estadisticas, play_button, nave,aliens, balas):
     #responde a las pulsaciones de teclas y los eventos del raton
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -40,12 +40,24 @@ def verificar_eventos(ai_configuraciones, pantalla,estadisticas, play_button, na
             verificar_eventos_keyup(event, nave)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(estadisticas, play_button,mouse_x,mouse_y)
-            
-def check_play_button(estadisticas, play_button, mouse_x, mouse_y):
+            check_play_button(ai_configuraciones, pantalla, estadisticas, play_button,nave, aliens, balas, mouse_x, mouse_y)
+
+def check_play_button(ai_configuraciones, pantalla, estadisticas, play_button,nave, aliens, balas, mouse_x, mouse_y):
     """Comienza UN NUEVO JUEGO CUANDO EL JUGADOR HACE CLICK EN PLAy"""
-    if play_button.rect.collidepoint(mouse_x, mouse_y):
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not estadisticas.game_active:
+        #ocultar el cursor del raton
+        pygame.mouse.set_visible(False)
+
+        #Restablece las estadisticas del jeugo
+        estadisticas.reset_stats()
         estadisticas.game_active = True
+        #vacia la lsita de aliens y balas
+        aliens.empty()
+        balas.empty()
+        #crea una nueva flota y centra la nave
+        crear_flota(ai_configuraciones, pantalla, nave,aliens)
+        nave.centrar_nave()
                     
                            
 def actualizar_pantalla(ai_configuraciones, pantalla,estadisticas, nave, aliens, balas, play_button):
@@ -153,7 +165,8 @@ def nave_golpeada(ai_configuraciones, estadisticas, pantalla, nave, aliens, bala
         #Pausa
         sleep(0.5)
     else:
-        estadisticas.game_active = False    
+        estadisticas.game_active = False
+        pygame.mouse.set_visible(True)    
     
 def check_aliens_bottom(ai_configuraciones, estadisticas, pantalla, nave, aliens, balas):
     """Comprueba si algun alien ha llegado al final de la pantalla"""
