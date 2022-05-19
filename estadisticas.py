@@ -5,7 +5,7 @@ class Estadisticas():
         self.ai_configuraciones = ai_configuraciones
         self.reset_stats()
         #Inicia invasion alienigena en un estado activo
-        self.game_active = True
+        self.game_active = False
         
 
 
